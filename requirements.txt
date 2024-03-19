@@ -2,8 +2,12 @@ GitPython
 keyboard
 mss
 numpy
-opencv-python-headless
+opencv_python
+opencv_python_headless
 Pillow
+PyAutoGUI
 pygame
+pyotp
+pytz
 pywin32
-tensorflow
+tensorflow-gpu
