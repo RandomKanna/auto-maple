@@ -1,4 +1,5 @@
 import tkinter as tk
+from tkinter import ttk
 from src.common import config
 from src.routine.components import Point
 from src.gui.interfaces import Frame
@@ -8,10 +9,10 @@ class Components(Frame):
     def __init__(self, parent, **kwargs):
         super().__init__(parent, **kwargs)
 
-        self.label = tk.Label(self, text='Components')
+        self.label = tk.Label(self, text='Components', font=('Segoe UI', 9, 'bold'))
         self.label.pack(fill='x', padx=5)
 
-        self.scroll = tk.Scrollbar(self)
+        self.scroll = ttk.Scrollbar(self)
         self.scroll.pack(side=tk.RIGHT, fill='y', pady=(0, 5))
 
         self.listbox = tk.Listbox(self, width=25,

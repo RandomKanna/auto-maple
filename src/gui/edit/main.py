@@ -19,26 +19,26 @@ class Edit(Tab):
         self.columnconfigure(4, weight=1)
 
         self.record = Record(self)
-        self.record.grid(row=2, column=3, sticky=tk.NSEW, padx=10, pady=10)
+        self.record.grid(row=2, column=3, sticky=tk.NSEW, padx=5, pady=5)
 
         self.minimap = Minimap(self)
-        self.minimap.grid(row=0, column=3, sticky=tk.NSEW, padx=10, pady=10)
+        self.minimap.grid(row=0, column=3, sticky=tk.NSEW, padx=5, pady=5)
 
         self.status = Status(self)
-        self.status.grid(row=1, column=3, sticky=tk.NSEW, padx=10, pady=10)
+        self.status.grid(row=1, column=3, sticky=tk.NSEW, padx=5, pady=5)
 
         self.routine = Routine(self)
-        self.routine.grid(row=0, column=1, rowspan=3, sticky=tk.NSEW, padx=10, pady=10)
+        self.routine.grid(row=0, column=1, rowspan=3, sticky=tk.NSEW, padx=5, pady=5)
 
         self.editor = Editor(self)
-        self.editor.grid(row=0, column=2, rowspan=3, sticky=tk.NSEW, padx=10, pady=10)
+        self.editor.grid(row=0, column=2, rowspan=3, sticky=tk.NSEW, padx=5, pady=5)
 
 
 class Editor(LabelFrame):
     def __init__(self, parent, **kwargs):
         super().__init__(parent, 'Editor', **kwargs)
 
-        self.columnconfigure(0, minsize=350)
+        self.columnconfigure(0, minsize=400)
 
         self.vars = {}
         self.contents = None
@@ -56,24 +56,21 @@ class Editor(LabelFrame):
         self.contents = Frame(self)
         self.contents.grid(row=0, column=0, sticky=tk.EW, padx=5)
 
-        title = tk.Entry(self.contents, justify=tk.CENTER)
+        title = tk.Label(self.contents, text='Nothing selected', justify=tk.CENTER,
+                         font=('Segoe UI', 10, 'bold'), bg='#2c313a', fg='#61afef')
         title.pack(expand=True, fill='x', pady=(5, 2))
-        title.insert(0, 'Nothing selected')
-        title.config(state=tk.DISABLED)
 
         self.create_disabled_entry()
 
     def create_disabled_entry(self):
         row = Frame(self.contents, highlightthickness=0)
-        row.pack(expand=True, fill='x')
+        row.pack(expand=True, fill='x', pady=2)
 
-        label = tk.Entry(row)
-        label.pack(side=tk.LEFT, expand=True, fill='x')
-        label.config(state=tk.DISABLED)
+        label = tk.Label(row, bg='#2c313a', height=1)
+        label.pack(side=tk.LEFT, expand=True, fill='x', padx=(0, 2))
 
-        entry = tk.Entry(row)
-        entry.pack(side=tk.RIGHT, expand=True, fill='x')
-        entry.config(state=tk.DISABLED)
+        entry = tk.Label(row, bg='#2c313a', height=1)
+        entry.pack(side=tk.RIGHT, expand=True, fill='x', padx=(2, 0))
 
     def create_entry(self, key, value):
         """
@@ -84,12 +81,10 @@ class Editor(LabelFrame):
         self.vars[key] = tk.StringVar(value=str(value))
 
         row = Frame(self.contents, highlightthickness=0)
-        row.pack(expand=True, fill='x')
+        row.pack(expand=True, fill='x', pady=2)
 
-        label = tk.Entry(row)
+        label = tk.Label(row, text=key, anchor=tk.W, padx=5)
         label.pack(side=tk.LEFT, expand=True, fill='x')
-        label.insert(0, key)
-        label.config(state=tk.DISABLED)
 
         entry = tk.Entry(row, textvariable=self.vars[key])
         entry.pack(side=tk.RIGHT, expand=True, fill='x')
@@ -108,16 +103,16 @@ class Editor(LabelFrame):
         self.contents = Frame(self)
         self.contents.grid(row=0, column=0, sticky=tk.EW, padx=5)
 
-        title = tk.Entry(self.contents, justify=tk.CENTER)
+        title = tk.Label(self.contents, text=f"Editing {arr[i].__class__.__name__}",
+                         justify=tk.CENTER, font=('Segoe UI', 10, 'bold'),
+                         bg='#2c313a', fg='#61afef')
         title.pack(expand=True, fill='x', pady=(5, 2))
-        title.insert(0, f"Editing {arr[i].__class__.__name__}")
-        title.config(state=tk.DISABLED)
 
         if len(arr[i].kwargs) > 0:
             for key, value in arr[i].kwargs.items():
                 self.create_entry(key, value)
-            button = tk.Button(self.contents, text='Save', command=func(arr, i, self.vars))
-            button.pack(pady=5)
+            button = ttk.Button(self.contents, text='Save', command=func(arr, i, self.vars))
+            button.pack(pady=10)
         else:
             self.create_disabled_entry()
 
@@ -129,10 +124,10 @@ class Editor(LabelFrame):
         self.contents = Frame(self)
         self.contents.grid(row=0, column=0, sticky=tk.EW, padx=5)
 
-        title = tk.Entry(self.contents, justify=tk.CENTER)
+        title = tk.Label(self.contents, text=f"Creating new ...",
+                         justify=tk.CENTER, font=('Segoe UI', 10, 'bold'),
+                         bg='#2c313a', fg='#61afef')
         title.pack(expand=True, fill='x', pady=(5, 2))
-        title.insert(0, f"Creating new ...")
-        title.config(state=tk.DISABLED)
 
         options = config.routine.get_all_components()
         var = tk.StringVar(value=tuple(options.keys()))
@@ -185,9 +180,9 @@ class Editor(LabelFrame):
 
         # Display search results
         results = Frame(self.contents)
-        results.pack(expand=True, fill='both', pady=(1, 0))
+        results.pack(expand=True, fill='both', pady=(5, 0))
 
-        scroll = tk.Scrollbar(results)
+        scroll = ttk.Scrollbar(results)
         scroll.pack(side=tk.RIGHT, fill='both')
 
         display = tk.Listbox(results, listvariable=var,
@@ -221,10 +216,10 @@ class Editor(LabelFrame):
         self.contents = Frame(self)
         self.contents.grid(row=0, column=0, sticky=tk.EW, padx=5)
 
-        title = tk.Entry(self.contents, justify=tk.CENTER)
+        title = tk.Label(self.contents, text=f"Creating new {component.__name__}",
+                         justify=tk.CENTER, font=('Segoe UI', 10, 'bold'),
+                         bg='#2c313a', fg='#61afef')
         title.pack(expand=True, fill='x', pady=(5, 2))
-        title.insert(0, f"Creating new {component.__name__}")
-        title.config(state=tk.DISABLED)
 
         sig = inspect.getfullargspec(component.__init__)
         if sig.defaults is None:
@@ -251,15 +246,15 @@ class Editor(LabelFrame):
             self.create_disabled_entry()
 
         controls = Frame(self.contents)
-        controls.pack(expand=True, fill='x')
+        controls.pack(expand=True, fill='x', pady=10)
 
-        add_button = tk.Button(controls, text='Add', command=self.add(component))
+        add_button = ttk.Button(controls, text='Add', command=self.add(component))
         if sticky:          # Only create 'cancel' button if stickied
-            add_button.pack(side=tk.RIGHT, pady=5)
-            cancel_button = tk.Button(controls, text='Cancel', command=self.cancel, takefocus=False)
-            cancel_button.pack(side=tk.LEFT, pady=5)
+            add_button.pack(side=tk.RIGHT, padx=5)
+            cancel_button = ttk.Button(controls, text='Cancel', command=self.cancel, takefocus=False)
+            cancel_button.pack(side=tk.LEFT, padx=5)
         else:
-            add_button.pack(pady=5)
+            add_button.pack()
 
     def cancel(self):
         """Button callback that exits the current Component creation UI."""
