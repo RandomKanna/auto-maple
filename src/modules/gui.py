@@ -5,7 +5,7 @@ import threading
 import tkinter as tk
 from tkinter import ttk
 from src.common import config, settings
-from src.gui import Menu, View, Edit, Settings
+from src.gui import Menu, View, Edit, Settings, theme
 
 
 class GUI:
@@ -24,6 +24,9 @@ class GUI:
         self.root.iconphoto(False, icon)
         self.root.geometry(GUI.RESOLUTIONS['DEFAULT'])
         self.root.resizable(False, False)
+
+        # Apply theme
+        theme.apply_theme(self.root)
 
         # Initialize GUI variables
         self.routine_var = tk.StringVar()

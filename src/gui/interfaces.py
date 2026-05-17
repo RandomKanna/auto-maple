@@ -73,8 +73,8 @@ class KeyBindings(LabelFrame):
             self.container = Frame(self, width=354, height=650)
             self.container.pack(side=tk.TOP, fill=tk.BOTH, expand=True, padx=(5, 0))
             self.container.pack_propagate(False)
-            self.canvas = tk.Canvas(self.container, bd=0, highlightthickness=0)
-            self.scrollbar = tk.Scrollbar(self.container, command=self.canvas.yview)
+            self.canvas = tk.Canvas(self.container, bd=0, highlightthickness=0, bg='#21252b')
+            self.scrollbar = ttk.Scrollbar(self.container, command=self.canvas.yview)
             self.scrollbar.pack(side=tk.RIGHT, fill=tk.Y)
             self.canvas.pack(side=tk.LEFT, fill=tk.BOTH, expand=True)
             self.contents = Frame(self.canvas)
@@ -94,10 +94,10 @@ class KeyBindings(LabelFrame):
             self.create_entry(action, key)
         self.focus()
 
-        self.reset = tk.Button(self, text='Reset', command=self.refresh_edit_ui, takefocus=False)
-        self.reset.pack(side=tk.LEFT, padx=5, pady=5)
-        self.save = tk.Button(self, text='Save', command=self.save_keybindings, takefocus=False)
-        self.save.pack(side=tk.RIGHT, padx=5, pady=5)
+        self.reset = ttk.Button(self, text='Reset', command=self.refresh_edit_ui, takefocus=False)
+        self.reset.pack(side=tk.LEFT, padx=5, pady=10)
+        self.save = ttk.Button(self, text='Save', command=self.save_keybindings, takefocus=False)
+        self.save.pack(side=tk.RIGHT, padx=5, pady=10)
 
     def refresh_edit_ui(self):
         self.destroy_contents()
@@ -141,12 +141,10 @@ class KeyBindings(LabelFrame):
         self.displays[action] = display_var
 
         row = Frame(self.contents, highlightthickness=0)
-        row.pack(expand=True, fill='x')
+        row.pack(expand=True, fill='x', pady=1)
 
-        label = tk.Entry(row)
+        label = tk.Label(row, text=action, anchor=tk.W, padx=5, width=20)
         label.grid(row=0, column=0, sticky=tk.EW)
-        label.insert(0, action)
-        label.config(state=tk.DISABLED)
 
         def on_key_press(_):
             k = kb.read_key()
@@ -181,12 +179,10 @@ class KeyBindings(LabelFrame):
 
     def create_disabled_entry(self):
         row = Frame(self.contents, highlightthickness=0)
-        row.pack(expand=True, fill='x')
+        row.pack(expand=True, fill='x', pady=1)
 
-        label = tk.Entry(row)
+        label = tk.Label(row, bg='#2c313a', width=20, height=1)
         label.grid(row=0, column=0, sticky=tk.EW)
-        label.config(state=tk.DISABLED)
 
-        entry = tk.Entry(row)
+        entry = tk.Label(row, bg='#2c313a', height=1)
         entry.grid(row=0, column=1, sticky=tk.EW)
-        entry.config(state=tk.DISABLED)

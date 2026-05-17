@@ -12,5 +12,6 @@ class Status(LabelFrame):
 
         self.cb_label = tk.Label(self, text='Command Book:')
         self.cb_label.grid(row=0, column=1, padx=5, pady=5, sticky=tk.E)
-        self.cb_entry = tk.Entry(self, textvariable=config.gui.view.status.curr_cb, state=tk.DISABLED)
-        self.cb_entry.grid(row=0, column=2, padx=(0, 5), pady=5, sticky=tk.EW)
+        self.cb_display = tk.Label(self, textvariable=config.gui.view.status.curr_cb,
+                                   bg='#2c313a', anchor=tk.W, padx=5)
+        self.cb_display.grid(row=0, column=2, padx=(0, 5), pady=5, sticky=tk.EW)

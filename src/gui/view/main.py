@@ -16,13 +16,13 @@ class View(Tab):
         self.grid_columnconfigure(3, weight=1)
 
         self.minimap = Minimap(self)
-        self.minimap.grid(row=0, column=2, sticky=tk.NSEW, padx=10, pady=10)
+        self.minimap.grid(row=0, column=2, sticky=tk.NSEW, padx=5, pady=5)
 
         self.status = Status(self)
-        self.status.grid(row=1, column=2, sticky=tk.NSEW, padx=10, pady=10)
+        self.status.grid(row=1, column=2, sticky=tk.NSEW, padx=5, pady=5)
 
         self.details = Details(self)
-        self.details.grid(row=2, column=2, sticky=tk.NSEW, padx=10, pady=10)
+        self.details.grid(row=2, column=2, sticky=tk.NSEW, padx=5, pady=5)
 
         self.routine = Routine(self)
-        self.routine.grid(row=0, column=1, rowspan=3, sticky=tk.NSEW, padx=10, pady=10)
+        self.routine.grid(row=0, column=1, rowspan=3, sticky=tk.NSEW, padx=5, pady=5)

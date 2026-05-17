@@ -8,10 +8,11 @@ class Details(LabelFrame):
         super().__init__(parent, 'Details', **kwargs)
         self.name_var = tk.StringVar()
 
-        self.name = tk.Entry(self, textvariable=self.name_var, justify=tk.CENTER, state=tk.DISABLED)
-        self.name.pack(pady=(5, 2))
+        self.name = tk.Label(self, textvariable=self.name_var, justify=tk.CENTER,
+                             font=('Segoe UI', 10, 'bold'), bg='#2c313a', fg='#61afef')
+        self.name.pack(pady=(5, 2), fill='x', padx=5)
 
-        self.scroll = tk.Scrollbar(self)
+        self.scroll = ttk.Scrollbar(self)
         self.scroll.pack(side=tk.RIGHT, fill=tk.Y, pady=5)
 
         self.text = tk.Text(self, width=1, height=10,

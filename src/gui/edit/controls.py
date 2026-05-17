@@ -1,4 +1,5 @@
 import tkinter as tk
+from tkinter import ttk
 from src.common import config
 from src.gui.interfaces import Frame
 
@@ -7,17 +8,17 @@ class Controls(Frame):
     def __init__(self, parent, **kwargs):
         super().__init__(parent, **kwargs)
 
-        self.up_arrow = tk.Button(self, text='▲', width=6, command=self.move('up'))
-        self.up_arrow.grid(row=0, column=0)
+        self.up_arrow = ttk.Button(self, text='▲', width=4, command=self.move('up'))
+        self.up_arrow.grid(row=0, column=0, padx=2)
 
-        self.down_arrow = tk.Button(self, text='▼', width=6, command=self.move('down'))
-        self.down_arrow.grid(row=0, column=1, padx=(5, 0))
+        self.down_arrow = ttk.Button(self, text='▼', width=4, command=self.move('down'))
+        self.down_arrow.grid(row=0, column=1, padx=2)
 
-        self.delete = tk.Button(self, text='\U00002715', width=3, command=self.delete)
-        self.delete.grid(row=0, column=2, padx=(5, 0))
+        self.delete = ttk.Button(self, text='✕', width=4, command=self.delete)
+        self.delete.grid(row=0, column=2, padx=2)
 
-        self.new = tk.Button(self, text='\U00002795', width=6, command=self.new)
-        self.new.grid(row=0, column=3, padx=(5, 0))
+        self.new = ttk.Button(self, text='＋', width=4, command=self.new)
+        self.new.grid(row=0, column=3, padx=2)
 
     def move(self, direction):
         """
