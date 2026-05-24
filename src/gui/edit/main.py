@@ -3,12 +3,14 @@
 from src.common import config
 import inspect
 import tkinter as tk
+from tkinter import ttk
 from src.routine.components import Point, Command
 from src.gui.edit.minimap import Minimap
 from src.gui.edit.record import Record
 from src.gui.edit.routine import Routine
 from src.gui.edit.status import Status
 from src.gui.interfaces import Tab, Frame, LabelFrame
+from src.gui.theme import Theme
 
 
 class Edit(Tab):
@@ -56,24 +58,20 @@ class Editor(LabelFrame):
         self.contents = Frame(self)
         self.contents.grid(row=0, column=0, sticky=tk.EW, padx=5)
 
-        title = tk.Entry(self.contents, justify=tk.CENTER)
+        title = ttk.Label(self.contents, text='Nothing selected', anchor=tk.CENTER)
         title.pack(expand=True, fill='x', pady=(5, 2))
-        title.insert(0, 'Nothing selected')
-        title.config(state=tk.DISABLED)
 
         self.create_disabled_entry()
 
     def create_disabled_entry(self):
-        row = Frame(self.contents, highlightthickness=0)
+        row = Frame(self.contents)
         row.pack(expand=True, fill='x')
 
-        label = tk.Entry(row)
-        label.pack(side=tk.LEFT, expand=True, fill='x')
-        label.config(state=tk.DISABLED)
+        label = ttk.Entry(row, state=tk.DISABLED)
+        label.pack(side=tk.LEFT, expand=True, fill='x', padx=(0, 2), pady=2)
 
-        entry = tk.Entry(row)
-        entry.pack(side=tk.RIGHT, expand=True, fill='x')
-        entry.config(state=tk.DISABLED)
+        entry = ttk.Entry(row, state=tk.DISABLED)
+        entry.pack(side=tk.RIGHT, expand=True, fill='x', padx=(2, 0), pady=2)
 
     def create_entry(self, key, value):
         """
@@ -83,16 +81,14 @@ class Editor(LabelFrame):
 
         self.vars[key] = tk.StringVar(value=str(value))
 
-        row = Frame(self.contents, highlightthickness=0)
+        row = Frame(self.contents)
         row.pack(expand=True, fill='x')
 
-        label = tk.Entry(row)
-        label.pack(side=tk.LEFT, expand=True, fill='x')
-        label.insert(0, key)
-        label.config(state=tk.DISABLED)
+        label = ttk.Label(row, text=key, anchor=tk.W)
+        label.pack(side=tk.LEFT, expand=True, fill='x', padx=(5, 2), pady=2)
 
-        entry = tk.Entry(row, textvariable=self.vars[key])
-        entry.pack(side=tk.RIGHT, expand=True, fill='x')
+        entry = ttk.Entry(row, textvariable=self.vars[key])
+        entry.pack(side=tk.RIGHT, expand=True, fill='x', padx=(2, 5), pady=2)
 
     def create_edit_ui(self, arr, i, func):
         """
@@ -108,15 +104,13 @@ class Editor(LabelFrame):
         self.contents = Frame(self)
         self.contents.grid(row=0, column=0, sticky=tk.EW, padx=5)
 
-        title = tk.Entry(self.contents, justify=tk.CENTER)
+        title = ttk.Label(self.contents, text=f"Editing {arr[i].__class__.__name__}", anchor=tk.CENTER)
         title.pack(expand=True, fill='x', pady=(5, 2))
-        title.insert(0, f"Editing {arr[i].__class__.__name__}")
-        title.config(state=tk.DISABLED)
 
         if len(arr[i].kwargs) > 0:
             for key, value in arr[i].kwargs.items():
                 self.create_entry(key, value)
-            button = tk.Button(self.contents, text='Save', command=func(arr, i, self.vars))
+            button = ttk.Button(self.contents, text='Save', command=func(arr, i, self.vars))
             button.pack(pady=5)
         else:
             self.create_disabled_entry()
@@ -129,10 +123,8 @@ class Editor(LabelFrame):
         self.contents = Frame(self)
         self.contents.grid(row=0, column=0, sticky=tk.EW, padx=5)
 
-        title = tk.Entry(self.contents, justify=tk.CENTER)
+        title = ttk.Label(self.contents, text=f"Creating new ...", anchor=tk.CENTER)
         title.pack(expand=True, fill='x', pady=(5, 2))
-        title.insert(0, f"Creating new ...")
-        title.config(state=tk.DISABLED)
 
         options = config.routine.get_all_components()
         var = tk.StringVar(value=tuple(options.keys()))
@@ -174,8 +166,8 @@ class Editor(LabelFrame):
 
         # Search bar
         input_var = tk.StringVar()
-        user_input = tk.Entry(self.contents, textvariable=input_var)
-        user_input.pack(expand=True, fill='x')
+        user_input = ttk.Entry(self.contents, textvariable=input_var)
+        user_input.pack(expand=True, fill='x', padx=5)
         user_input.insert(0, 'Search for a component')
         user_input.bind('<FocusIn>', lambda _: user_input.selection_range(0, 'end'))
         user_input.bind('<Return>', on_entry_return)
@@ -192,7 +184,11 @@ class Editor(LabelFrame):
 
         display = tk.Listbox(results, listvariable=var,
                              activestyle='none',
-                             yscrollcommand=scroll.set)
+                             yscrollcommand=scroll.set,
+                             bg=Theme.ACCENT, fg=Theme.FOREGROUND,
+                             selectbackground=Theme.HIGHLIGHT,
+                             selectforeground=Theme.BACKGROUND,
+                             borderwidth=0, highlightthickness=0)
         display.bind('<Double-1>', on_display_submit)
         display.bind('<Return>', on_display_submit)
         display.bind('<Up>', on_display_up)
@@ -221,10 +217,8 @@ class Editor(LabelFrame):
         self.contents = Frame(self)
         self.contents.grid(row=0, column=0, sticky=tk.EW, padx=5)
 
-        title = tk.Entry(self.contents, justify=tk.CENTER)
+        title = ttk.Label(self.contents, text=f"Creating new {component.__name__}", anchor=tk.CENTER)
         title.pack(expand=True, fill='x', pady=(5, 2))
-        title.insert(0, f"Creating new {component.__name__}")
-        title.config(state=tk.DISABLED)
 
         sig = inspect.getfullargspec(component.__init__)
         if sig.defaults is None:
@@ -253,10 +247,10 @@ class Editor(LabelFrame):
         controls = Frame(self.contents)
         controls.pack(expand=True, fill='x')
 
-        add_button = tk.Button(controls, text='Add', command=self.add(component))
+        add_button = ttk.Button(controls, text='Add', command=self.add(component))
         if sticky:          # Only create 'cancel' button if stickied
             add_button.pack(side=tk.RIGHT, pady=5)
-            cancel_button = tk.Button(controls, text='Cancel', command=self.cancel, takefocus=False)
+            cancel_button = ttk.Button(controls, text='Cancel', command=self.cancel, takefocus=False)
             cancel_button.pack(side=tk.LEFT, pady=5)
         else:
             add_button.pack(pady=5)

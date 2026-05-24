@@ -1,6 +1,8 @@
 import tkinter as tk
+from tkinter import ttk
 from src.routine.components import Point
 from src.gui.interfaces import LabelFrame
+from src.gui.theme import Theme
 
 
 class Record(LabelFrame):
@@ -12,14 +14,18 @@ class Record(LabelFrame):
         self.entries = []
         self.display_var = tk.StringVar()
 
-        self.scroll = tk.Scrollbar(self)
+        self.scroll = ttk.Scrollbar(self)
         self.scroll.pack(side=tk.RIGHT, fill='y', pady=5)
 
         self.listbox = tk.Listbox(self, width=25,
                                   listvariable=self.display_var,
                                   exportselection=False,
                                   activestyle='none',
-                                  yscrollcommand=self.scroll.set)
+                                  yscrollcommand=self.scroll.set,
+                                  bg=Theme.ACCENT, fg=Theme.FOREGROUND,
+                                  selectbackground=Theme.HIGHLIGHT,
+                                  selectforeground=Theme.BACKGROUND,
+                                  borderwidth=0, highlightthickness=0)
         self.listbox.bind('<Up>', lambda e: 'break')
         self.listbox.bind('<Down>', lambda e: 'break')
         self.listbox.bind('<Left>', lambda e: 'break')

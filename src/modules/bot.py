@@ -10,6 +10,7 @@ import traceback
 from os.path import splitext, basename
 from src.common import config, utils
 from src.detection import detection
+from src.detection.runesolver import RuneSolver
 from src.routine import components
 from src.routine.routine import Routine
 from src.command_book.command_book import CommandBook
@@ -36,6 +37,7 @@ class Bot(Configurable):
         super().__init__('keybindings')
         config.bot = self
 
+        self.rune_solver = RuneSolver()
         self.rune_active = False
         self.rune_pos = (0, 0)
         self.rune_closest_pos = (0, 0)      # Location of the Point closest to rune
@@ -112,6 +114,16 @@ class Bot(Configurable):
         :param sct:     The mss instance object with which to take screenshots.
         :return:        None
         """
+
+        # Ensure runesolver runs before other code
+        frame = config.capture.frame
+        yolo_solution = self.rune_solver.solve(frame)
+        if yolo_solution:
+            print(f"YOLO Solution found: {yolo_solution}")
+            for arrow in yolo_solution:
+                utils.press(arrow, 1, down_time=0.1)
+            self.rune_active = False
+            return
 
         move = self.command_book['move']
         move(*self.rune_pos).execute()

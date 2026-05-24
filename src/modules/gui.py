@@ -6,6 +6,7 @@ import tkinter as tk
 from tkinter import ttk
 from src.common import config, settings
 from src.gui import Menu, View, Edit, Settings
+from src.gui.theme import Theme
 
 
 class GUI:
@@ -24,6 +25,10 @@ class GUI:
         self.root.iconphoto(False, icon)
         self.root.geometry(GUI.RESOLUTIONS['DEFAULT'])
         self.root.resizable(False, False)
+
+        # Apply theme
+        self.theme = Theme()
+        self.root.configure(background=Theme.BACKGROUND)
 
         # Initialize GUI variables
         self.routine_var = tk.StringVar()

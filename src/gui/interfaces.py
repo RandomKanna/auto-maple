@@ -5,9 +5,10 @@ import keyboard as kb
 from tkinter import ttk
 from src.common import utils
 from src.common.interfaces import Configurable
+from src.gui.theme import Theme
 
 
-class Frame(tk.Frame):
+class Frame(ttk.Frame):
     def __init__(self, parent, **kwargs):
         super().__init__(parent, **kwargs)
         self.parent = parent
@@ -94,9 +95,9 @@ class KeyBindings(LabelFrame):
             self.create_entry(action, key)
         self.focus()
 
-        self.reset = tk.Button(self, text='Reset', command=self.refresh_edit_ui, takefocus=False)
+        self.reset = ttk.Button(self, text='Reset', command=self.refresh_edit_ui, takefocus=False)
         self.reset.pack(side=tk.LEFT, padx=5, pady=5)
-        self.save = tk.Button(self, text='Save', command=self.save_keybindings, takefocus=False)
+        self.save = ttk.Button(self, text='Save', command=self.save_keybindings, takefocus=False)
         self.save.pack(side=tk.RIGHT, padx=5, pady=5)
 
     def refresh_edit_ui(self):
@@ -140,13 +141,11 @@ class KeyBindings(LabelFrame):
         display_var = tk.StringVar(value=key)
         self.displays[action] = display_var
 
-        row = Frame(self.contents, highlightthickness=0)
+        row = Frame(self.contents)
         row.pack(expand=True, fill='x')
 
-        label = tk.Entry(row)
-        label.grid(row=0, column=0, sticky=tk.EW)
-        label.insert(0, action)
-        label.config(state=tk.DISABLED)
+        label = ttk.Label(row, text=action, anchor=tk.W)
+        label.grid(row=0, column=0, sticky=tk.EW, padx=(5, 2))
 
         def on_key_press(_):
             k = kb.read_key()
@@ -173,20 +172,18 @@ class KeyBindings(LabelFrame):
             return False
 
         reg = (self.register(validate), '%d')
-        entry = tk.Entry(row, textvariable=display_var,
-                         validate='key', validatecommand=reg,
-                         takefocus=False)
+        entry = ttk.Entry(row, textvariable=display_var,
+                          validate='key', validatecommand=reg,
+                          takefocus=False, justify=tk.CENTER)
         entry.bind('<KeyPress>', on_key_press)
-        entry.grid(row=0, column=1, sticky=tk.EW)
+        entry.grid(row=0, column=1, sticky=tk.EW, padx=(2, 5), pady=2)
 
     def create_disabled_entry(self):
-        row = Frame(self.contents, highlightthickness=0)
+        row = Frame(self.contents)
         row.pack(expand=True, fill='x')
 
-        label = tk.Entry(row)
-        label.grid(row=0, column=0, sticky=tk.EW)
-        label.config(state=tk.DISABLED)
+        label = ttk.Label(row, text='')
+        label.grid(row=0, column=0, sticky=tk.EW, padx=(5, 2))
 
-        entry = tk.Entry(row)
-        entry.grid(row=0, column=1, sticky=tk.EW)
-        entry.config(state=tk.DISABLED)
+        entry = ttk.Entry(row, state=tk.DISABLED)
+        entry.grid(row=0, column=1, sticky=tk.EW, padx=(2, 5), pady=2)
