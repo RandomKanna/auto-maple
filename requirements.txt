@@ -11,3 +11,6 @@ pyotp
 pytz
 pywin32
 tensorflow-gpu
+torch
+torchvision
+ultralytics

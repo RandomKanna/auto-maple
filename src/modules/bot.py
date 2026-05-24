@@ -81,6 +81,20 @@ class Bot(Configurable):
         config.listener.enabled = True
         last_fed = time.time()
         while True:
+            # Check schedule
+            if config.enabled_schedule:
+                now = time.strftime('%H:%M')
+                if config.start_time < config.stop_time:
+                    if config.start_time <= now < config.stop_time:
+                        config.enabled = True
+                    else:
+                        config.enabled = False
+                elif config.start_time > config.stop_time:
+                    if now >= config.start_time or now < config.stop_time:
+                        config.enabled = True
+                    else:
+                        config.enabled = False
+
             if config.enabled and len(config.routine) > 0:
                 # Buff and feed pets
                 self.command_book.buff.main()
