@@ -129,16 +129,6 @@ class Bot(Configurable):
         :return:        None
         """
 
-        # Ensure runesolver runs before other code
-        frame = config.capture.frame
-        yolo_solution = self.rune_solver.solve(frame)
-        if yolo_solution:
-            print(f"YOLO Solution found: {yolo_solution}")
-            for arrow in yolo_solution:
-                utils.press(arrow, 1, down_time=0.1)
-            self.rune_active = False
-            return
-
         move = self.command_book['move']
         move(*self.rune_pos).execute()
         adjust = self.command_book['adjust']
@@ -147,9 +137,19 @@ class Bot(Configurable):
         press(self.config['Interact'], 1, down_time=0.2)        # Inherited from Configurable
 
         print('\nSolving rune:')
-        inferences = []
         for _ in range(15):
             frame = config.capture.frame
+
+            # 1. Prioritize RuneSolver (YOLO / Template)
+            solution = self.rune_solver.solve(frame)
+            if solution:
+                print(f"Solution found by RuneSolver: {solution}")
+                for arrow in solution:
+                    utils.press(arrow, 1, down_time=0.1)
+                self.rune_active = False
+                break
+
+            # 2. Fallback to existing detection
             solution = detection.merge_detection(model, frame)
             if solution:
                 print(', '.join(solution))
