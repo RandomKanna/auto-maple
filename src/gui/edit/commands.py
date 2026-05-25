@@ -1,25 +1,31 @@
 import tkinter as tk
+from tkinter import ttk
 
 from src.common import config
 from src.routine.components import Point
 from src.gui.interfaces import Frame
+from src.gui.theme import Theme
 
 
 class Commands(Frame):
     def __init__(self, parent, **kwargs):
         super().__init__(parent, **kwargs)
 
-        self.label = tk.Label(self, text='Commands')
-        self.label.pack(fill='x', padx=5)
+        self.label = ttk.Label(self, text='Commands', anchor=tk.CENTER)
+        self.label.pack(fill='x', padx=5, pady=5)
 
-        self.scroll = tk.Scrollbar(self)
+        self.scroll = ttk.Scrollbar(self)
         self.scroll.pack(side=tk.RIGHT, fill='y', pady=(0, 5))
 
         self.listbox = tk.Listbox(self, width=25,
                                   listvariable=parent.parent.commands_var,
                                   exportselection=False,
                                   activestyle='none',
-                                  yscrollcommand=self.scroll.set)
+                                  yscrollcommand=self.scroll.set,
+                                  bg=Theme.ACCENT, fg=Theme.FOREGROUND,
+                                  selectbackground=Theme.HIGHLIGHT,
+                                  selectforeground=Theme.BACKGROUND,
+                                  borderwidth=0, highlightthickness=0)
         self.listbox.bind('<Up>', lambda e: 'break')
         self.listbox.bind('<Down>', lambda e: 'break')
         self.listbox.bind('<Left>', lambda e: 'break')

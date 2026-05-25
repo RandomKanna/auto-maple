@@ -4,6 +4,7 @@ from PIL import ImageTk, Image
 from src.gui.interfaces import LabelFrame
 from src.common import config, utils
 from src.routine.components import Point
+from src.gui.theme import Theme
 
 
 class Minimap(LabelFrame):
@@ -12,7 +13,7 @@ class Minimap(LabelFrame):
 
         self.WIDTH = 400
         self.HEIGHT = 300
-        self.canvas = tk.Canvas(self, bg='black',
+        self.canvas = tk.Canvas(self, bg=Theme.BORDER,
                                 width=self.WIDTH, height=self.HEIGHT,
                                 borderwidth=0, highlightthickness=0)
         self.canvas.pack(expand=True, fill='both', padx=5, pady=5)

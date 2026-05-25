@@ -10,6 +10,7 @@ import traceback
 from os.path import splitext, basename
 from src.common import config, utils
 from src.detection import detection
+from src.detection.runesolver import RuneSolver
 from src.routine import components
 from src.routine.routine import Routine
 from src.command_book.command_book import CommandBook
@@ -36,6 +37,7 @@ class Bot(Configurable):
         super().__init__('keybindings')
         config.bot = self
 
+        self.rune_solver = RuneSolver()
         self.rune_active = False
         self.rune_pos = (0, 0)
         self.rune_closest_pos = (0, 0)      # Location of the Point closest to rune
@@ -79,6 +81,20 @@ class Bot(Configurable):
         config.listener.enabled = True
         last_fed = time.time()
         while True:
+            # Check schedule
+            if config.enabled_schedule:
+                now = time.strftime('%H:%M')
+                if config.start_time < config.stop_time:
+                    if config.start_time <= now < config.stop_time:
+                        config.enabled = True
+                    else:
+                        config.enabled = False
+                elif config.start_time > config.stop_time:
+                    if now >= config.start_time or now < config.stop_time:
+                        config.enabled = True
+                    else:
+                        config.enabled = False
+
             if config.enabled and len(config.routine) > 0:
                 # Buff and feed pets
                 self.command_book.buff.main()
@@ -121,9 +137,19 @@ class Bot(Configurable):
         press(self.config['Interact'], 1, down_time=0.2)        # Inherited from Configurable
 
         print('\nSolving rune:')
-        inferences = []
         for _ in range(15):
             frame = config.capture.frame
+
+            # 1. Prioritize RuneSolver (YOLO / Template)
+            solution = self.rune_solver.solve(frame)
+            if solution:
+                print(f"Solution found by RuneSolver: {solution}")
+                for arrow in solution:
+                    utils.press(arrow, 1, down_time=0.1)
+                self.rune_active = False
+                break
+
+            # 2. Fallback to existing detection
             solution = detection.merge_detection(model, frame)
             if solution:
                 print(', '.join(solution))

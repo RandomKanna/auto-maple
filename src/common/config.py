@@ -16,6 +16,11 @@ player_pos = (0, 0)
 # Describes whether the main bot loop is currently running or not
 enabled = False
 
+# Variables related to the scheduler
+enabled_schedule = False
+start_time = '00:00'
+stop_time = '00:00'
+
 # If there is another player in the map, Auto Maple will purposely make random human-like mistakes
 stage_fright = False
 

@@ -3,6 +3,8 @@ A list of user-defined settings that can be changed by routines. Also contains a
 of validator functions that can be used to enforce parameter types.
 """
 
+import re
+
 
 #################################
 #      Validator Functions      #
@@ -32,6 +34,18 @@ def validate_boolean(value):
     elif int(value) in {0, 1}:
         return bool(int(value))
     raise ValueError(f"'{value}' is not a valid boolean.")
+
+
+def validate_time(value):
+    """
+    Checks whether VALUE is a valid time in HH:MM format.
+    :param value:   The string to check.
+    :return:        VALUE as a string if it is valid.
+    """
+
+    if re.match(r'^([01]\d|2[0-3]):([0-5]\d)$', value):
+        return value
+    raise ValueError(f"'{value}' is not a valid time in HH:MM format.")
 
 
 def validate_arrows(key):
@@ -70,18 +84,25 @@ SETTING_VALIDATORS = {
     'move_tolerance': float,
     'adjust_tolerance': float,
     'record_layout': validate_boolean,
-    'buff_cooldown': validate_nonnegative_int
+    'buff_cooldown': validate_nonnegative_int,
+    'enabled_schedule': validate_boolean,
+    'start_time': validate_time,
+    'stop_time': validate_time
 }
 
 
 def reset():
     """Resets all settings to their default values."""
 
-    global move_tolerance, adjust_tolerance, record_layout, buff_cooldown
+    global move_tolerance, adjust_tolerance, record_layout, buff_cooldown, \
+        enabled_schedule, start_time, stop_time
     move_tolerance = 0.1
     adjust_tolerance = 0.01
     record_layout = False
     buff_cooldown = 180
+    enabled_schedule = False
+    start_time = '00:00'
+    stop_time = '00:00'
 
 
 # The allowed error from the destination when moving towards a Point
@@ -95,5 +116,14 @@ record_layout = False
 
 # The amount of time (in seconds) to wait between each call to the 'buff' command
 buff_cooldown = 180
+
+# Whether the scheduler is enabled
+enabled_schedule = False
+
+# The time to start the bot
+start_time = '00:00'
+
+# The time to stop the bot
+stop_time = '00:00'
 
 reset()
